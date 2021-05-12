@@ -53,7 +53,7 @@ const App = () => {
 
       const movArr = await Promise.all(movies.map(async (item,index) => {
         
-      const url = 'http://www.omdbapi.com/?apikey=b46fa339&i='+item.imdbID;
+      const url = 'https://www.omdbapi.com/?apikey=b46fa339&i='+item.imdbID;
   
       const response = await fetch(url);
   
@@ -72,7 +72,7 @@ const App = () => {
 
       const movArr = await Promise.all(favourites.map(async (item,index) => {
         
-      const url = 'http://www.omdbapi.com/?apikey=b46fa339&i='+item.imdbID;
+      const url = 'https://www.omdbapi.com/?apikey=b46fa339&i='+item.imdbID;
   
       const response = await fetch(url);
   
@@ -89,7 +89,7 @@ const App = () => {
 
   const getMovieRequest = async (searchVal) => {
 
-    const url=`http://www.omdbapi.com/?s=${searchVal}&apikey=b46fa339`
+    const url=`https://www.omdbapi.com/?s=${searchVal}&apikey=b46fa339`
 
     const response = await fetch(url);
 
