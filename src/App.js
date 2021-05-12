@@ -15,6 +15,8 @@ const App = () => {
 
   const [movieRatingList, setMovieRatingList] = useState([]);
 
+  const [movieFavRatingList, setMovieFavRatingList] = useState([]);
+
   const [searchVal,setSearchVal] = useState('batman');
 
   const [favourites,setFavourites] = useState([]);
@@ -46,18 +48,43 @@ const App = () => {
 	  const scrollRef1 = useRef(null);
 
 
-  const getMovieInfo = async (imdbID) => {
 
-      const url = 'http://www.omdbapi.com/?apikey=b46fa339&i='+imdbID;
+  const getMovieRatingList = async (movies) => {
+
+      const movArr = await Promise.all(movies.map(async (item,index) => {
+        
+      const url = 'http://www.omdbapi.com/?apikey=b46fa339&i='+item.imdbID;
   
       const response = await fetch(url);
   
       const resJSON = await response.json();
-
-      //console.log('rating :'+resJSON.imdbRating)
       
       return resJSON.imdbRating
-       
+        
+      }));
+
+      console.log(movArr)
+      setMovieRatingList(movArr);
+
+  }
+
+  const getMovieFavRatingList = async (favourites) => {
+
+      const movArr = await Promise.all(favourites.map(async (item,index) => {
+        
+      const url = 'http://www.omdbapi.com/?apikey=b46fa339&i='+item.imdbID;
+  
+      const response = await fetch(url);
+  
+      const resJSON = await response.json();
+      
+      return resJSON.imdbRating
+        
+      }));
+
+      console.log(movArr)
+      setMovieFavRatingList(movArr);
+
   }
 
   const getMovieRequest = async (searchVal) => {
@@ -74,15 +101,6 @@ const App = () => {
 
       setMovies(resJson.Search);
 
-      const movArr = await Promise.all(resJson.Search.map(async (item,index) => {
-        
-      return getMovieInfo(item.imdbID);
-        
-      }));
-
-      console.log(movArr)
-      setMovieRatingList(movArr);
-
     }
 
   }
@@ -92,6 +110,21 @@ const App = () => {
     getMovieRequest(searchVal);
 
   }, [searchVal]);
+
+  useEffect(() => {
+    
+    getMovieRatingList(movies);
+
+  }, [movies]);
+
+
+  useEffect(() => {
+    
+    getMovieFavRatingList(favourites);
+
+  }, [favourites]);
+
+
 
   useEffect(() => {
 
@@ -141,7 +174,7 @@ const App = () => {
         <MovieHeader header='Favourites' />
       </div>      
       <div className='row m-1' ref={scrollRef1} onWheel={onWheel1} >
-        <MovieList movies={favourites} handleFavouritesClick={removeFavouriteMovie} movieRatingList={movieRatingList} favouriteComp = {RemoveFavourites} />
+        <MovieList movies={favourites} handleFavouritesClick={removeFavouriteMovie} movieRatingList={movieFavRatingList} favouriteComp = {RemoveFavourites} />
       </div>      
     </div>
   );
